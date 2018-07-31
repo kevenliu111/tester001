@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="root@45.63.22.200:22" showNewOnSourceInSync="false">
+    <serverData>
+      <paths name="45.63.22.200">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/insweb" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="root@45.63.22.200:22">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/www/wwwroot/insweb" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

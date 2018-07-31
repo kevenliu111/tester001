@@ -1,0 +1,21 @@
+Metadata-Version: 1.1
+Name: django-proxy
+Version: 1.1.0
+Summary: A simple HTTP proxy service as a Django app
+Home-page: https://github.com/mjumbewu/django-proxy
+Author: Mjumbe Wawatu Ukweli
+Author-email: mjumbewu@gmail.com
+License: BSD
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Web Environment
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.2
+Classifier: Framework :: Django

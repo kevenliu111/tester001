@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    {% include "css_base.html" %}
+    <link href="/static/bootstrap-table/dist/bootstrap-table.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/bootstrap-table-examples/assets/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="/static/x-editable/dist/bootstrap4-editable/css/bootstrap-editable.css">
+    <!--<link rel="stylesheet" href="/static/bootstrap-table-examples/assets/examples.css">-->
+</head>
+
+<body>
+
+<!--<div class="container">
+    <div id = "accordion">
+    {% for choice in userdata %}
+    <div class="card">
+      <div class="card-header">
+          <a class="collapsed card-link" data-toggle="collapse" href="#collapse{{ choice.username }}">{{ choice.username }}</a>
+          <button type="button" class="btn btn-primary" style="" >登录</button>
+      </div>
+      <div id="collapse{{ choice.username }}" class="collapse" data-parent="#accordion">
+          <div class="card-body">
+
+          </div>
+      </div>
+    </div>
+    {% endfor %}
+    <button type="button" class="btn btn-primary">快速创建账号</button>
+    </div>
+</div>-->
+
+
+<div class="container">
+    <h1>Boostrap v4.0</h1>
+    <div id="toolbar">
+        <button id="remove" class="btn btn-danger" disabled>
+            <i class="glyphicon glyphicon-remove"></i> Delete
+        </button>
+        <button id="creat" class="btn btn-primary">CreatAccount</button>
+        <button id="setuppro" class="btn btn-primary">SetUpAccount</button>
+        <button id="uploadp" class="btn btn-primary">UpLoadPhoto</button>
+        <button id="shopdatabtn" class="btn btn-primary">ShopData</button>
+    </div>
+
+    <div class="">
+        <div class="alert alert-info row" >
+            <div style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis">
+                <strong>執行狀態：</strong><spam id="stateid"></spam><spam id="runstate">無</spam>
+            </div>
+            <button id="showrunstate" class="btn btn-primary" style="">ViewAll</button>
+            <button id="loginview" class="btn btn-primary" style="">loginview</button>
+        </div>
+
+    </div>
+    <table id="table"
+           data-toolbar="#toolbar"
+           data-search="true"
+           data-show-refresh="true"
+           data-show-toggle="true"
+           data-show-columns="true"
+           data-detail-view="true"
+           data-detail-formatter="detailFormatter"
+           data-minimum-count-columns="2"
+           data-show-pagination-switch="true"
+           data-pagination="true"
+           data-id-field="id"
+           data-page-list="[10, 25, 50, 100, ALL]"
+           data-show-footer="false"
+           data-side-pagination="server"
+           data-url="/acinfo/"
+           data-response-handler="responseHandler">
+    </table>
+</div>
+
+
+
+<!-- 模态框 -->
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <!-- 模态框头部 -->
+      <div class="modal-header">
+          <h4 class="modal-title"></h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- 模态框主体 -->
+      <div class="modal-body" style="word-wrap: break-word;">
+
+
+
+      </div>
+
+      <!-- 模态框底部 -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- 模态框 -->
+<div class="modal fade" id="acmodel">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <!-- 模态框头部 -->
+      <div class="modal-header">
+          <h4 class="modal-title"></h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- 模态框主体 -->
+      <div class="modal-body" style="word-wrap: break-word;">
+
+      </div>
+
+      <!-- 模态框底部 -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="loginreflash">更新</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+<!-- 模态框 uploadphoto-->
+<div class="modal fade" id="uploadphoto">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <!-- 模态框头部 -->
+      <div class="modal-header">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+          <label class="btn btn-secondary active" id="editphoto">
+            <input type="radio" name="options"  autocomplete="off" checked> 圖片
+          </label>
+          <label class="btn btn-secondary" id="editcaption">
+            <input type="radio" name="options"  autocomplete="off"> 文字
+          </label>
+        </div>
+        <h4 class="modal-title" style="margin-left: 10px;"></h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- 模态框主体 -->
+      <div class="modal-body" style="word-wrap: break-word;">
+
+      </div>
+
+      <!-- 模态框底部 -->
+        <div class="modal-footer flex-column">
+            <div class="input-group" style="margin-bottom: 5px;" id="editphotofooter">
+
+                <div class="custom-file" >
+                    <input type="file" class="custom-file-input" id="inputGroupFile01">
+                    <label class="custom-file-label" for="inputGroupFile01">選擇圖片</label>
+                </div>
+
+
+                <div class="input-group-prepend">
+                    <button type="button" class="btn btn-secondary" id="uploadphotopost">上傳</button>
+                </div>
+                <!--<div class="input-group-append">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                </div>-->
+            </div>
+
+            <div class="input-group" style="margin-bottom: 5px;" id="editcaptionfooter">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">文字內容</span>
+                </div>
+                <textarea class="form-control"></textarea>
+
+                <div class="input-group-prepend">
+                    <button type="button" class="btn btn-secondary" id="uploadcaption">上傳</button>
+                </div>
+
+            </div>
+
+            <div class="d-flex justify-content-end" style="width:100%;">
+                <div class="btn-group" role="group" aria-label="" style="padding-right: 10px;">
+                  <button type="button" class="btn btn-secondary" id="uploadpicchoise">選擇</button>
+                  <button type="button" class="btn btn-secondary" id="uploadpicdelete">刪除</button>
+                </div>
+                <div class="btn-group" role="group" aria-label="">
+                    <button type="button" class="btn btn-danger" id="uploadconfrim">發佈</button>
+                    <button type="button" class="btn btn-danger" id="uploadphp">發佈</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress" >
+          <div class="progress-bar progress-bar-striped" id="progressupload" style="width:1%"></div>
+        </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- shop模态框 -->
+<div class="modal fade" id="shopmodel">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <!-- 模态框头部 -->
+      <div class="modal-header">
+          <h4 class="modal-title">修改用戶</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- 模态框主体 -->
+      <div class="modal-body" style="word-wrap: break-word;">
+        <div id="shopmodeltoolbar">
+            <button id="remove" class="btn btn-danger" disabled>
+                <i class="glyphicon glyphicon-remove"></i> Delete
+            </button>
+        </div>
+
+        <table id="shopmodeltable"
+           data-toolbar="#shopmodeltoolbar"
+           data-search="true"
+           data-show-refresh="true"
+           data-show-toggle="true"
+           data-show-columns="true"
+           data-detail-view="true"
+           data-detail-formatter="detailFormatter"
+           data-minimum-count-columns="2"
+           data-show-pagination-switch="true"
+           data-pagination="true"
+           data-id-field="id"
+           data-page-list="[10, 25, 50, 100, ALL]"
+           data-show-footer="false"
+           data-side-pagination="server"
+           data-url="/shopinfo/"
+           data-response-handler="responseHandler">
+        </table>
+
+      </div>
+
+      <!-- 模态框底部 -->
+        <div class="modal-footer">
+          <label for="pwd">Shopname:</label>
+          <input type="text" class="form-control" id="shopnametext" placeholder="">
+          <button type="button" class="btn btn-primary" id="shopupdata">添加</button>
+          <button type="button" class="btn btn-danger" id="shopuprun">執行</button>
+          <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>-->
+        </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+</body>
+
+
+    {% include "js_base.html" %}
+    <script src="/static/bootstrap-table/dist/bootstrap-table.js"></script>
+    <script src="/static/x-editable/dist/bootstrap4-editable/js/bootstrap-editable.js"></script>
+    <script src="/static/bootstrap-table/dist/extensions/editable/bootstrap-table-editable.js"></script>
+    <script>
+    var stateid = 0;
+    var uploadenable = false;
+    var $table = $('#table'),
+        $remove = $('#remove'),
+        $creat = $('#creat'),
+        $runstate = $('#runstate'),
+        $setuppro = $('#setuppro'),
+        selections = [];
+
+    function getState(){
+        var gsurl = "/ugstate/?state=" + stateid;
+         $.get(gsurl,function(data,status) {
+
+             //var tmpjson = jQuery.parseJSON(data)
+             //alert(data['id'])
+             //$('#stateid').html(data['id'])
+             if (stateid != data['id']) {
+                 stateid = data['id'];
+                 $runstate.html(data['state']);
+                 $("#myModal .modal-body").append('<p>'+ data['state'] + '</p>');
+             }
+
+         })
+    }
+
+
+
+    var t2 = '';
+
+    function initTable() {
+        $table.bootstrapTable({
+            columns: [
+                [
+                    {
+                        field: 'state',
+                        checkbox: true,
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle'
+                    }, {
+                        title: 'username',
+                        field: 'username',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                    }, {
+                        title: 'User Detail',
+                        colspan: 4,
+                        align: 'center'
+                    }
+                ],
+                [
+                    {
+                        field: 'phonenum',
+                        title: 'phonenum',
+                        sortable: true,
+                        align: 'center',
+                    }, {
+                        field: 'uploadset',
+                        title: 'uploadset',
+                        align: 'center',
+                        sortable: true,
+                        editable: {
+                            type: 'select',
+                            title: '部门',
+                            source:[{value:"0",text:"关闭"},{value:"1",text:"开启"}]
+                        }
+                    }, {
+                        field: 'followset',
+                        title: 'followset',
+                        align: 'center',
+                        sortable: true,
+                        editable: {
+                            type: 'select',
+                            title: '部门',
+                            source:[{value:"0",text:"关闭"},{value:"1",text:"开启"}]
+                        }
+                    }, {
+                        field: 'operate',
+                        title: 'Item Operate',
+                        align: 'center',
+                        events: operateEvents,
+                        formatter: operateFormatter
+                    }
+                ]
+            ],
+            onEditableSave: function (field, row, oldValue, $el) {
+                var rowtmp = JSON.stringify(row);
+                alert(row[field]);
+                $.ajax({
+                    type: "post",
+                    url: "/acinfoedit/",
+                    data: {
+                        id:row['id'],
+                        content:row[field],
+                        field:field,
+                        csrfmiddlewaretoken:"{{ csrf_token }}",
+                    },
+                    dataType: 'JSON',
+                    success: function (data, status) {
+                        if (status == "success") {
+                            alert('提交数据成功'+ data);
+                        }
+                    },
+                    error: function () {
+                        alert('编辑失败');
+
+                    },
+                    complete: function () {
+                        $el.removeClass('editable-unsaved');
+                    }
+                });
+            }
+        });
+        // sometimes footer render error.
+        setTimeout(function () {
+            $table.bootstrapTable('resetView');
+        }, 200);
+        $table.on('check.bs.table uncheck.bs.table ' +
+                'check-all.bs.table uncheck-all.bs.table', function () {
+            $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
+            // save your data, here just save the current page
+            selections = getIdSelections();
+            // push or splice the selections if you want to save all data selections
+        });
+        $table.on('expand-row.bs.table', function (e, index, row, $detail) {
+            /*if (index % 2 == 1) {
+                $detail.html('Loading from ajax request...');
+                $.get('LICENSE', function (res) {
+                    $detail.html(res.replace(/\n/g, '<br>'));
+                });
+            }*/
+        });
+        $table.on('all.bs.table', function (e, name, args) {
+            console.log(name, args);
+        });
+        $remove.click(function () {
+            var ids = getIdSelections();
+            $table.bootstrapTable('remove', {
+                field: 'id',
+                values: ids
+            });
+            $remove.prop('disabled', true);
+        });
+
+        $('#showrunstate').click(function () {
+            $("#myModal .modal-title").html("狀態：");
+            $('#myModal').modal('show');
+        });
+
+        $('#loginview').click(function () {
+            //$("#myModal .modal-title").html("狀態：");
+            $('#acmodel').modal('show');
+        });
+
+        $creat.click(function () {
+            //$runstate.html('正在創建新賬號.......')
+            //$("#myModal .modal-body").append('正在創建新賬號.......')
+            //$runstate.modal('show')
+            t2 = window.setInterval("getState()",5000);
+            $.get("/creatac/",function(data,status){
+                //alert("数据: " + JSON.stringify(data) + "\n状态: " + status);
+                //$runstate.html('創建執行完成：')
+                 //$("#myModal .modal-body").append('創建執行完成：')
+                //$runstate.html("数据: " + JSON.stringify(data) + "\n状态: " + status)
+
+                //$("#myModal .modal-body").append("数据: " + JSON.stringify(data) + "\n状态: " + status)
+
+                $table.bootstrapTable('refresh');
+                window.clearTimeout(t2);
+                getState();
+              });
+
+        });
+
+        $setuppro.click(function () {
+            $runstate.html('正在設定賬號詳情.......');
+            $("#myModal .modal-body").append('正在設定賬號詳情.......');
+            t2 = window.setInterval("getState()",5000);
+            $.ajax({
+                url:"/setuppro/",
+                type:"POST",
+                data:{
+                    csrfmiddlewaretoken:"{{ csrf_token }}", //必须写在模板中，才会被渲染
+                },
+                success:function (data) {
+                    $table.bootstrapTable('refresh');
+                    window.clearTimeout(t2);
+                    $runstate.html("数据: \n" + data + "\n状态: " + status);
+                    $("#myModal .modal-body").append("数据: \n" + data + "\n状态: " + status);
+                    getState();
+                }
+            })
+
+        });
+
+
+
+
+        $(window).resize(function () {
+            $table.bootstrapTable('resetView', {
+                height: getHeight()
+            });
+        });
+    }
+
+
+
+    function getIdSelections() {
+        return $.map($table.bootstrapTable('getSelections'), function (row) {
+            return row.id
+        });
+    }
+    function responseHandler(res) {
+        $.each(res.rows, function (i, row) {
+            row.state = $.inArray(row.id, selections) !== -1;
+        });
+        return res;
+    }
+    function detailFormatter(index, row) {
+        var html = [];
+        $.each(row, function (key, value) {
+            html.push('<p><b>' + key + ':</b> ' + value + '</p>');
+        });
+        return html.join('');
+    }
+    function operateFormatter(value, row, index) {
+        return [
+            '<a class="weblogin" href="javascript:void(0)" title="weblogin">',
+            '<i class="fa fa-heart-o"></i>',
+            '</a>  ',
+            '<a class="intfollow" href="javascript:void(0)" title="intfollow">',
+            '<i class="fa fa-heart"></i>',
+            '</a>  ',
+            '<a class="edit" href="javascript:void(0)" title="edit">',
+            '<i class="fa fa-pencil fa-fw"></i>',
+            '</a>',
+            '<a class="remove" href="javascript:void(0)" title="Remove">',
+            '<i class="fa fa-trash"></i>',
+            '</a>'
+        ].join('');
+    }
+
+    function aclogincall(username,pwd,phonenum, reflash){
+        $.ajax({
+                url:"/loginweb/",
+                type:"POST",
+                data:{
+                    csrfmiddlewaretoken:"{{ csrf_token }}", //必须写在模板中，才会被渲染
+                    username:username,
+                    pwd:pwd,
+                    phonenum:phonenum,
+                    reflash:reflash
+                },
+                success:function (data) {
+                    //window.clearTimeout(t2);
+                    //$table.bootstrapTable('refresh');
+                    /*if(data['content']){
+                        $runstate.html(decodeURIComponent('登錄成功！'));
+                        $("#myModal .modal-body").append(decodeURIComponent('登錄成功！'));
+                        $("#acmodel .modal-title").html(data['username']);
+                        htmltmp = '';
+                        htmltmp = htmltmp + "<div class='row'>";
+                        htmltmp = htmltmp + "<p>更新時間：</p>" + data['date'];
+                        for (var k = 0, length = data['content'].length; k < length; k++) {
+                            htmltmp = htmltmp + "<div class='col'>" + '<a href = "'+ data['content'][k].url + '" target="_blank">post['+ k +']:'+  data['content'][k].url + '</a></div>';
+                        }
+                        htmltmp = htmltmp + "</div>";
+                        $("#acmodel .modal-body").html(htmltmp);
+                        $('#loginreflash').click(function (){aclogincall(data['username'],'true')})
+                        //getState();
+                    }else{
+                        $("#acmodel .modal-body").html('未發帖子！');
+                    }*/
+
+                }
+            })
+
+    }
+
+    window.operateEvents = {
+        'click .weblogin': function (e, value, row, index) {
+
+            aclogincall(row['username'],row['pwd'],row['phonenum'], 'false');
+
+        },
+        'click .remove': function (e, value, row, index) {
+            $table.bootstrapTable('remove', {
+                field: 'id',
+                values: [row.id]
+            });
+        },
+        'click .intfollow': function (e, value, row, index) {
+            $runstate.html('正在執行默認follow.......');
+            $("#myModal .modal-body").append('正在執行默認follow.......');
+            $.ajax({
+                url:"/ffollow/",
+                type:"POST",
+                data:{
+                    csrfmiddlewaretoken:"{{ csrf_token }}", //必须写在模板中，才会被渲染
+                    username:row['username'],
+                },
+                success:function (data) {
+                    $table.bootstrapTable('refresh');
+                    window.clearTimeout(t2);
+                    $runstate.html("数据: \n" + data + "\n状态: " + status);
+                    $("#myModal .modal-body").append("数据: \n" + data + "\n状态: " + status);
+                    getState();
+                }
+            })
+        },
+        'click .edit': function(e, value, row, index) {
+            //$('#edittable').bootstrapTable('destroy');
+        }
+    };
+
+
+
+    var picid = 'no';
+    //var selectedid = 'no';
+    var pcmodel = 'photo'
+    function uploadFile2(method) {
+        $('#uploadphoto').modal('show');
+        var form = new FormData();
+        form.append("pcmodel", pcmodel);
+        form.append("method", method);
+        form.append("csrfmiddlewaretoken","{{ csrf_token }}");
+        if(pcmodel=='caption') {
+            if (method == 'upload') {
+                $('#uploadphoto .modal-body').html('上傳文字.........');
+                var fileobj = $("#editcaptionfooter textarea").val();
+                form.append("caption", fileobj);
+                console.log(fileobj);
+            } else if (method == 'delete') {
+                $('#uploadphoto .modal-body').html('刪除文字.........');
+                form.append("picid", picid);
+            } else if (method == 'select') {
+                $('#uploadphoto .modal-body').html('選擇文字.........');
+                form.append("picid", picid);
+            } else {
+                $('#uploadphoto .modal-body').html('加載文字.........');
+            }
+        }else if(pcmodel=='photo'){
+            if (method == 'upload') {
+                $('#uploadphoto .modal-body').html('上傳圖片.........');
+                var fileobj = $("#inputGroupFile01")[0].files[0];
+                form.append("img", fileobj);
+                console.log(fileobj);
+            } else if (method == 'delete') {
+                $('#uploadphoto .modal-body').html('刪除圖片.........');
+                form.append("picid", picid);
+            } else if (method == 'select') {
+                $('#uploadphoto .modal-body').html('選擇圖片.........');
+                form.append("picid", picid);
+            } else {
+                $('#uploadphoto .modal-body').html('加載圖片.........');
+            }
+        }else if(pcmodel=='confrim'){
+            $('#uploadphoto .modal-body').html('加載發佈名單.........');
+        }else{
+            $('#uploadphoto .modal-body').html('Model Eerror!!!!!!90001.........');
+            return;
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/getloadimg/',
+            data: form,
+            processData: false,
+            contentType: false,
+            xhr: function(){
+    　　　　　　var xhr = $.ajaxSettings.xhr();
+    　　　　　　if(onprogress && xhr.upload) {
+                    $('#progressupload').addClass('progress-bar-animated');
+    　　　　　　　　xhr.upload.addEventListener("progress" , onprogress, false);
+    　　　　　　　　return xhr;
+    　　　　　　}
+    　　　　},
+            success: function (data) {
+                //console.log(data);
+                let uploadtitle = '';
+                $('#progressupload').removeClass('progress-bar-animated');
+                pcmodel = data.page;
+                if(pcmodel == 'photo') {
+                    if (data.content == '') {
+                        $('#uploadphoto .modal-body').html('無圖片！');
+                    } else {
+                        var htmltmp = '';
+                        htmltmp = htmltmp + "<div class='row'>";
+                        for (var k = 0, length = data.content.length; k < length; k++) {
+                            htmltmp = htmltmp + "<div datapicid= '" + data.content[k].id + "' class='uploadpic col-3 ";
+                            if (data.content[k].selected) {
+                                //uploadtitle = "已選發佈圖片編號：" + data.content[k].id;
+                                picid = data.content[k].id;
+                                htmltmp = htmltmp + "selected";
+                            }
+                            htmltmp = htmltmp + " '>";
+                            htmltmp = htmltmp + '<img  src="/static/basepic/5-121204193R0-50.gif" data-original= "' + data.content[k].url + '" class="img-fluid lazy" >';
+                            htmltmp = htmltmp + "<p class='text-center '>圖片編號：" + data.content[k].id + '</p></div>';
+                        }
+                        htmltmp = htmltmp + "</div>";
+                        $("#uploadphoto .modal-title").html(data.title);
+                        $('#uploadphoto .modal-body').html(htmltmp);
+                        $("img.lazy").lazyload({
+                            effect: "fadeIn",
+                        });
+
+                        $('.uploadpic').click(function (event) {
+                            $('.uploadpic').removeClass('selected');
+                            $(this).addClass('selected');
+                            picid = $(this).attr("datapicid");
+                        })
+                    }
+                }else if(pcmodel=='caption'){
+                    if (data.content == '') {
+                        $('#uploadphoto .modal-body').html('無文字描述！');
+                    } else {
+                        var htmltmp = '';
+                        htmltmp = htmltmp + "<div class='row'>";
+                        for (var k = 0, length = data.content.length; k < length; k++) {
+                            htmltmp = htmltmp + "<div datapicid= '" + data.content[k].id + "' class='uploadpic col-3 ";
+                            if (data.content[k].selected) {
+                                //uploadtitle = "已選發佈caption編號：" + data.content[k].id;
+                                picid = data.content[k].id;
+                                htmltmp = htmltmp + "selected";
+                            }
+                            htmltmp = htmltmp + " '>";
+                            /*htmltmp = htmltmp + '<img  src="/static/basepic/5-121204193R0-50.gif" data-original= "' + data[k].url + '" class="img-fluid lazy" >';*/
+                            htmltmp = htmltmp + "<p class='text-center '>內容：" + data.content[k].caption + '</p>';
+                            htmltmp = htmltmp + "<p class='text-center '>內容編號：" + data.content[k].id + '</p></div>';
+                        }
+                        htmltmp = htmltmp + "</div>";
+                        $("#uploadphoto .modal-title").html(data.title);
+                        $('#uploadphoto .modal-body').html(htmltmp);
+                        $('.uploadpic').click(function (event) {
+                            $('.uploadpic').removeClass('selected');
+                            $(this).addClass('selected');
+                            picid = $(this).attr("datapicid");
+                        })
+                    }
+                }else if(pcmodel=='confrim'){
+                    if (data.content == '') {
+                        $('#uploadphoto .modal-body').html('未選擇發佈名單！');
+                    }else{
+                        var htmltmp = '';
+                        htmltmp = htmltmp + "<div class='row'>";
+                        for (var k = 0, length = data.content.length; k < length; k++) {
+                            htmltmp = htmltmp + "<p class='text-center '>用戶名：" + data.content[k].username + '</p>';
+                        }
+                        htmltmp = htmltmp + "</div>";
+                        $("#uploadphoto .modal-title").html(data.title);
+                        $('#uploadphoto .modal-body').html(htmltmp);
+                        $('#uploadconfrim').hide();
+                        $('#uploadphp').show();
+                    }
+                }
+            }
+        })
+    }
+
+    function onprogress(evt){
+    　　var loaded = evt.loaded;     //已经上传大小情况
+        var tot = evt.total;      //附件总大小
+        var per = Math.floor(100*loaded/tot);  //已经上传的百分比
+        //$("#progressupload").html( per +"%" );
+        $("#progressupload").css("width" , per +"%");
+    }
+
+
+
+
+    $('#uploadpicdelete').click(function () {
+        uploadFile2('delete');
+    });
+
+    $('#uploadpicchoise').click(function () {
+        uploadFile2('select');
+    });
+
+    $("#editcaptionfooter").hide();
+
+    $("#editphoto").click(function() {
+        $("#editcaptionfooter").hide();
+        $("#editphotofooter").show();
+        pcmodel = 'photo';
+        uploadFile2('');
+    });
+    $("#editcaption").click(function() {
+        $("#editphotofooter").hide();
+        $("#editcaptionfooter").show();
+        pcmodel = 'caption';
+        uploadFile2('');
+        //alert($("#editcaptionfooter textarea").val());
+    });
+
+
+    $('#uploadphp').hide();
+    $("#uploadconfrim").click(function () {
+
+        $("#editphotofooter").hide();
+        $("#editcaptionfooter").hide();
+        pcmodel = 'confrim';
+        uploadFile2('');
+    });
+
+    $('#uploadphp').click(function () {
+        //$runstate.html('正在上傳圖片至ins.......');
+        //$("#myModal .modal-body").append('正在上傳圖片至ins.......');
+        $("#uploadphoto .modal-title").html('正在上傳圖片至ins.......');
+        $('#uploadphoto .modal-body').html('正在上傳圖片至ins.......');
+        $.ajax({
+            url:"/insuploadphoto/",
+            type:"POST",
+            data:{
+                csrfmiddlewaretoken:"{{ csrf_token }}", //必须写在模板中，才会被渲染
+            },
+            success:function (data) {
+                $table.bootstrapTable('refresh');
+                window.clearTimeout(t2);
+                $runstate.html("数据: \n" + data + "\n状态: " + status);
+                $("#myModal .modal-body").append("数据: \n" + data + "\n状态: " + status);
+                getState();
+            }
+        })
+    });
+
+
+    $('#uploadp').click(function () {
+
+        uploadFile2('');
+
+
+    });
+
+    $("#inputGroupFile01").on('change', function (e) {
+        $('#uploadphotopost').popover('disable');
+        uploadenable = true;
+        var imgname = e.currentTarget.files[0].name;
+        $('#uploadphoto .custom-file label').text(imgname);
+        //aim.text(imgname);
+    });
+
+
+    $('#uploadphotopost').popover({
+        trigger: 'focus',
+        title: '未選擇圖片',
+        content: '需選擇圖片后上傳！',
+    });
+
+
+    $('#uploadphotopost').click(function () {
+        if(uploadenable){
+            uploadFile2('upload');
+        }
+    });
+
+    $('#uploadcaption').popover({
+        trigger: 'manual',
+        title: '無文字內容',
+        content: '需填入文字內容！',
+    });
+    //$('#uploadcaption').popover('disable');
+
+    $('#uploadcaption').click(function () {
+        if($.trim($("#editcaptionfooter textarea").val())!=''){
+            $('#uploadcaption').popover('hide');
+            uploadFile2('upload');
+            console.log($.trim($("#editcaptionfooter textarea").val()));
+        }else{
+            $('#uploadcaption').popover('show');
+            console.log('no caption!');
+        }
+    });
+
+    $('#shopdatabtn').click(function () {
+        $('#shopmodeltable').bootstrapTable({
+            columns: [
+                [
+                    {
+                        field: 'state',
+                        checkbox: true,
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle'
+                    }, {
+                        title: 'shopname',
+                        field: 'shopname',
+                        rowspan: 2,
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                    }, {
+                        title: 'User Detail',
+                        colspan: 4,
+                        align: 'center'
+                    }
+                ],
+                [
+                    {
+                        field: 'add_date',
+                        title: 'add_date',
+                        sortable: true,
+                        align: 'center',
+                    }, {
+                        field: 'disable',
+                        title: 'disable',
+                        align: 'center',
+                        sortable: true,
+                        editable: {
+                            type: 'select',
+                            title: 'disable',
+                            source:[{value:"False",text:"关闭"},{value:"True",text:"开启"}]
+                        }
+                    }, {
+                        field: 'id',
+                        title: 'id',
+                        align: 'center',
+                        sortable: true,
+                    }, {
+                        field: 'operate',
+                        title: 'Item Operate',
+                        align: 'center',
+                        events: operateEvents,
+                        formatter: operateFormatter
+                    }
+                ]
+            ],
+            onEditableSave: function (field, row, oldValue, $el) {
+                var rowtmp = JSON.stringify(row);
+                alert(row[field]);
+                $.ajax({
+                    type: "post",
+                    url: "/shopinfo/",
+                    data: {
+                        method:'edit',
+                        id:row['id'],
+                        content:row[field],
+                        field:field,
+                        csrfmiddlewaretoken:"{{ csrf_token }}",
+                    },
+                    dataType: 'JSON',
+                    success: function (data, status) {
+                        if (status == "success") {
+                            alert('提交数据成功'+ data);
+                        }
+                    },
+                    error: function () {
+                        alert('编辑失败');
+
+                    },
+                    complete: function () {
+                        $el.removeClass('editable-unsaved');
+                    }
+                });
+            }
+        });
+        $('#shopupdata').click(function () {
+            let shopname = $('#shopnametext').val();
+            console.log(shopname);
+            $.ajax({
+                type: "post",
+                url: "/shopinfo/",
+                data: {
+                    method:'creat',
+                    shopname:shopname,
+                    csrfmiddlewaretoken:"{{ csrf_token }}",
+                },
+                dataType: 'JSON',
+                success: function (data, status) {
+                    if (status == "success") {
+                        alert('提交数据成功'+ data);
+                    }
+                },
+                error: function () {
+                    alert('编辑失败');
+
+                },
+                complete: function () {
+
+                }
+            });
+        });
+        $('#shopuprun').click(function () {
+            $.ajax({
+                type: "post",
+                url: "/shopinfo/",
+                data: {
+                    method:'run',
+                    csrfmiddlewaretoken:"{{ csrf_token }}",
+                },
+                dataType: 'JSON',
+                success: function (data, status) {
+                    if (status == "success") {
+                        alert('提交数据成功'+ data);
+                    }
+                },
+                error: function () {
+                    alert('编辑失败');
+
+                },
+                complete: function () {
+
+                }
+            });
+        });
+        $('#shopmodel').modal('show');
+    });
+
+
+
+    function totalTextFormatter(data) {
+        return 'Total';
+    }
+    function totalNameFormatter(data) {
+        return data.length;
+    }
+    function totalPriceFormatter(data) {
+        var total = 0;
+        $.each(data, function (i, row) {
+            total += +(row.price.substring(1));
+        });
+        return '$' + total;
+    }
+    function getHeight() {
+        return $(window).height() - $('h1').outerHeight(true);
+    }
+    $(function () {
+        initTable();
+    });
+</script>
+
+</html>

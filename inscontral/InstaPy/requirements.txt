@@ -1,0 +1,5 @@
+selenium
+clarifai
+pyvirtualdisplay
+emoji
+GitPython
